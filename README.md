@@ -9,4 +9,10 @@ This repo splits it into the problems it really holds:
 - `kb/` is the desk's knowledge base export, with a build setup and our signed page added;
 - `rendered/` is our page as the desk sees it (the built HTML).
 
+Our page:
+
+- source: [`kb/src/routes/kb/incidents/4471-split/+page.svx`](kb/src/routes/kb/incidents/4471-split/+page.svx) (its table: `kb/src/lib/kb/SplitTable.svelte`, `kb/src/lib/kb/split.ts`)
+- as the desk sees it: [`rendered/kb/incidents/4471-split.html`](rendered/kb/incidents/4471-split.html)
+- tickets: [#1 parser](../../issues/1) · [#2 booking-v3 hint](../../issues/2) · [#3 one-day move](../../issues/3)
+
 Build the kb yourself: `cd kb && npm install && npm run build` (pages land in `kb/build/`).
