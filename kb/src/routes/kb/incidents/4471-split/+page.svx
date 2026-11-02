@@ -1,0 +1,60 @@
+---
+layout: runbook
+title: '#4471 split · three problems, not one'
+owner: codingpains
+status: open
+reviewed: 2026-11-02
+signature: 'v1.eyJzdWIiOiIxODYxIiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTM2NDE4MzYsImV4cCI6MTc5MzcyODIzNn0.ja9D2GEwaQnQfrwXX_8ku0-bgQI5qMwIYaHhFgwsGQA'
+---
+
+<script>
+  import SplitTable from '#lib/kb/SplitTable.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+</script>
+
+[#4471](/kb/incidents/4471) is marked known: one parser bug, one fix queued. Its reports hold
+three problems. The parser fix covers the biggest one only. The other two keep coming after it ships.
+
+<Callout kind="warn">
+#4471 is not one issue. Each problem below has its own ticket and its own fix.
+</Callout>
+
+## What #4471 holds
+
+<SplitTable
+  ticket={4471}
+  tickets={{
+    parser: 'https://github.com/codingpains/mega-s01e03-what-it-shows/issues/1',
+    hint: 'https://github.com/codingpains/mega-s01e03-what-it-shows/issues/2',
+    'one-day': 'https://github.com/codingpains/mega-s01e03-what-it-shows/issues/3',
+  }}
+/>
+
+- **`parser`**: the shared parser reads every date month first. Every tenant on file writes the
+  day first, so day and month swap. This is the bug #4471 describes, and the fix it has queued.
+- **`hint`**: the `booking-v3` form prints `MM/DD/YYYY` under its date field, people type the
+  month first, and the form reads the date day first. Only bookings typed into that form, at the
+  tenants who run it. The parser fix does not reach the form.
+- **`one-day`**: the date moves by one day; day and month do not swap. The desk already read
+  these as a one-day move (`desk-notes.json`), but the #4471 page files them under the parser and
+  only footnotes them. A meeting in Lisbon and Toronto landing on different days points at time
+  zones. Not confirmed yet.
+
+## How it was counted
+
+- One id, one report. The export repeats some reports because its pages overlap; they count once.
+- A report goes where its **tenant** puts it: the locale they write dates in and the booking form
+  they run (`causes.ts`). The intake tag is a guess from the reporter's browser. It is shown in the
+  table and used for nothing: it disagrees with the tenant in both directions.
+- The desk's one-day reports count apart, under their own ticket.
+- The table is built from the export at render time. If the queue grows, the numbers follow.
+
+## What to do with #4471
+
+- Keep #4471 for the parser. Do not close it as fixed for the other two.
+- Matching on subject line ([decision 0001](/kb/decisions/0001-dedupe-by-subject)) put all three
+  in one ticket: the subjects match, the causes do not. Before merging during an incident, check
+  that the tenant and the way the report came in point to the same cause.
+
+<RenderStamp {signature} />
