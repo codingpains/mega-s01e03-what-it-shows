@@ -1,6 +1,6 @@
 ---
 layout: runbook
-title: '#4471 split · three problems, not one'
+title: '#4471 split · what it held'
 owner: codingpains
 status: open
 reviewed: 2026-11-02
@@ -13,48 +13,48 @@ signature: 'v1.eyJzdWIiOiIxODYxIiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpY
   import Callout from '#lib/kb/Callout.svelte';
 </script>
 
-[#4471](/kb/incidents/4471) is marked known: one parser bug, one fix queued. Its reports hold
-three problems. The parser fix covers the biggest one only. The other two keep coming after it ships.
+[#4471](/kb/incidents/4471) was merged as one issue and marked known. Its reports held more than
+one problem. Engineering closed #4471 on 5 October: the parser is fixed, and the `booking-v3` form
+is retired instead of fixed. Each problem has its own ticket below, with where it stands.
 
 <Callout kind="warn">
-#4471 is not one issue. Each problem below has its own ticket and its own fix.
+#4471 was not one issue. The parser fix closes only the parser reports.
 </Callout>
 
-## What #4471 holds
+## What #4471 held
 
 <SplitTable
   ticket={4471}
   tickets={{
-    parser: 'https://github.com/codingpains/mega-s01e03-what-it-shows/issues/1',
-    hint: 'https://github.com/codingpains/mega-s01e03-what-it-shows/issues/2',
-    'one-day': 'https://github.com/codingpains/mega-s01e03-what-it-shows/issues/3',
+    parser: { href: 'https://github.com/codingpains/mega-s01e03-what-it-shows/issues/1', state: 'fixed' },
+    hint: { href: 'https://github.com/codingpains/mega-s01e03-what-it-shows/issues/2', state: "won't fix: form retired" },
   }}
+  oneDay={{ href: 'https://github.com/codingpains/mega-s01e03-what-it-shows/issues/3', state: 'open' }}
 />
 
-- **`parser`**: the shared parser reads every date month first. Every tenant on file writes the
-  day first, so day and month swap. This is the bug #4471 describes, and the fix it has queued.
-- **`hint`**: the `booking-v3` form prints `MM/DD/YYYY` under its date field, people type the
-  month first, and the form reads the date day first. Only bookings typed into that form, at the
-  tenants who run it. The parser fix does not reach the form.
-- **`one-day`**: the date moves by one day; day and month do not swap. The desk already read
-  these as a one-day move (`desk-notes.json`), but the #4471 page files them under the parser and
-  only footnotes them. A meeting in Lisbon and Toronto landing on different days points at time
-  zones. Not confirmed yet.
+- **`parser`**: the shared parser read every date month first. Every tenant on file writes the
+  day first, so day and month swapped. Fixed: `fix(dates): parse dd/mm for eu locales`.
+- **`hint`**: the `booking-v3` form printed `MM/DD/YYYY` under its date field, people typed the
+  month first, and the form read the date day first. Only bookings typed into that form, at the
+  tenants who ran it. The parser fix does not reach it. Won't fix: the form is retired.
+- **one-day move**: the date moves by one day; day and month do not swap. The desk read these as a
+  one-day move (`desk-notes.json`) and files them under the parser by tenant, so they count there
+  too. Neither the parser fix nor the form's retirement moves a date back by a day. A meeting in
+  Lisbon and Toronto landing on different days points at time zones; not confirmed.
 
 ## How it was counted
 
 - One id, one report. The export repeats some reports because its pages overlap; they count once.
 - A report goes where its **tenant** puts it: the locale they write dates in and the booking form
-  they run (`causes.ts`). The intake tag is a guess from the reporter's browser. It is shown in the
-  table and used for nothing: it disagrees with the tenant in both directions.
-- The desk's one-day reports count apart, under their own ticket.
-- The table is built from the export at render time. If the queue grows, the numbers follow.
+  they run (`causes.ts`), as the desk counts. The intake tag is a guess from the reporter's
+  browser: it is shown, and used for nothing.
+- The table is built from the export at render time, so the numbers follow the data.
 
-## What to do with #4471
+## Next time
 
-- Keep #4471 for the parser. Do not close it as fixed for the other two.
-- Matching on subject line ([decision 0001](/kb/decisions/0001-dedupe-by-subject)) put all three
-  in one ticket: the subjects match, the causes do not. Before merging during an incident, check
-  that the tenant and the way the report came in point to the same cause.
+- Matching on subject line ([decision 0001](/kb/decisions/0001-dedupe-by-subject)) put every
+  problem in one ticket: the subjects match, the causes do not. Before merging, check that the
+  tenant and the way the report came in point to the same cause.
+- When a fix ships, watch for reports that keep coming: they belong to a problem the fix did not cover.
 
 <RenderStamp {signature} />
